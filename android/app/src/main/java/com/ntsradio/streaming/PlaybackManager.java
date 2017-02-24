@@ -13,7 +13,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import java.io.IOException;
 
 class PlaybackManager implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
     private String currentUrl;
     private ReactApplicationContext reactApplicationContext;
     private WifiManager.WifiLock wifiLock;
@@ -78,7 +78,7 @@ class PlaybackManager implements MediaPlayer.OnPreparedListener, MediaPlayer.OnC
     }
 
     private void releaseWifiLock() {
-        if (wifiLock.isHeld()) {
+        if (wifiLock != null && wifiLock.isHeld()) {
             wifiLock.release();
         }
     }
