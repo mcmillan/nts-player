@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Alert} from 'react-native';
+import {View, Alert, NativeModules} from 'react-native';
 import Station from './Station';
 
 export default class StationList extends Component {
@@ -31,6 +31,6 @@ export default class StationList extends Component {
   }
 
   play(url) {
-    Alert.alert(url);
+    NativeModules.Streaming.play(url);
   }
 }
