@@ -11,30 +11,55 @@ export default class Station extends Component {
       url: PropTypes.string,
       imageUrl: PropTypes.string
     }),
-    onPress: PropTypes.func
+    onPress: PropTypes.func,
+    isActive: PropTypes.bool,
+    playStatus: PropTypes.string
   }
 
   render() {
     return (
       <TouchableHighlight style={{flex: 1}} onPress={this.props.onPress}>
         {this.withImageWrapper(this.props.show.imageUrl,
-          (<View style={{backgroundColor: '#ffffffdd', paddingVertical: 10, paddingHorizontal: 14}}>
-            <View style={{flexDirection: 'row'}}>
-              <View style={{backgroundColor: '#000', paddingHorizontal: 5, marginRight: 5}}>
-                <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}>{this.props.name}</Text>
+          (<View style={{flexDirection: 'column'}}>
+            {this.props.isActive &&
+              <View style={{backgroundColor: '#000000', paddingVertical: 10, paddingHorizontal: 14}}>
+                <Text style={{color: '#fff'}}>{this.friendlyStatus(this.props.playStatus)}</Text>
+              </View>}
+            <View style={{backgroundColor: '#ffffffdd', paddingVertical: 10, paddingHorizontal: 14}}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{backgroundColor: '#000', paddingHorizontal: 5, marginRight: 5, justifyContent: 'center'}}>
+                  <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}>{this.props.name}</Text>
+                </View>
+                <View>
+                  <Text style={{color: '#000', fontSize: 16}}>
+                    {this.props.show.title}
+                  </Text>
+                  {this.props.show.location &&
+                    <Text style={{color: '#000'}}>{this.props.show.location}</Text>}
+                </View>
               </View>
-              <Text style={{color: '#000', fontSize: 16}}>
-                {this.props.show.title}
-                {this.props.show.location && ` (${this.props.show.location})`}
-              </Text>
+              {this.props.show.description &&
+                <Text style={{color: '#000', marginTop: 5}}>
+                  {this.props.show.description}
+                </Text>}
             </View>
-            {this.props.show.description &&
-              <Text style={{color: '#000', marginTop: 3}}>
-                {this.props.show.description}
-              </Text>}
           </View>))}
       </TouchableHighlight>
     );
+  }
+
+  friendlyStatus(status) {
+    if (status === 'buffering') {
+      return 'Loading...';
+    }
+
+    if (status === 'playing') {
+      return 'Now Playing';
+    }
+
+    if (status === 'stopped') {
+      return 'Stopped';
+    }
   }
 
   withImageWrapper(imageUrl, body) {

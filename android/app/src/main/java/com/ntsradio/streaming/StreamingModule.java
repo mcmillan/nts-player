@@ -1,6 +1,7 @@
 package com.ntsradio.streaming;
 
 
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -11,7 +12,7 @@ public class StreamingModule extends ReactContextBaseJavaModule {
 
     public StreamingModule(ReactApplicationContext context) {
         super(context);
-        playbackManager = new PlaybackManager(context);
+        playbackManager = PlaybackManager.getInstance(context);
     }
 
     @Override
@@ -22,5 +23,15 @@ public class StreamingModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void play(String url) {
         playbackManager.play(url);
+    }
+
+    @ReactMethod
+    public void stop() {
+        playbackManager.stop();
+    }
+
+    @ReactMethod
+    public void refresh() {
+        playbackManager.refresh();
     }
 }
