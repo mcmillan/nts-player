@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text} from 'react-native';
 
 module.exports = (props) => (
-  <View>
-    <Text>Loading...</Text>
+  <View style={{backgroundColor: '#000'}}>
+    <Text style={{color: '#fff', textAlign: 'center'}}>Loading...</Text>
   </View>
 );

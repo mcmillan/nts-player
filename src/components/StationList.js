@@ -9,6 +9,8 @@ export default class StationList extends Component {
     this.state = {
       stations: [],
       currentUrl: null,
+      currentNotificationTitle: null,
+      currentNotificationText: null,
       playStatus: 'stopped',
       errored: false
     };
@@ -30,6 +32,7 @@ export default class StationList extends Component {
     const response = await fetch('https://nts-api.joshmcmillan.com/api/live')
     const responseJSON = await response.json();
     this.setState({stations: responseJSON.stations});
+    this.updateNowPlaying();
     setTimeout(() => this.loadStations(), 1000 * 10);
   }
 
@@ -42,7 +45,7 @@ export default class StationList extends Component {
           this.state.stations.map((s) =>
             <Station
               {...s}
-              onPress={() => this.playOrStop(s.streamUrl)}
+              onPress={() => this.playOrStop(s)}
               key={s.name}
               isActive={s.streamUrl == this.state.currentUrl}
               playStatus={this.state.playStatus}
@@ -51,11 +54,29 @@ export default class StationList extends Component {
     );
   }
 
-  playOrStop(url) {
-    if (this.state.playStatus !== 'stopped' && url === this.state.currentUrl) {
+  updateNowPlaying() {
+    if (this.state.playStatus !== 'playing') {
+      return;
+    }
+
+    const station = this.state.stations.find((s) => s.streamUrl === this.state.currentUrl);
+
+    if (!station) {
+      return;
+    }
+
+    NativeModules.Streaming.updateNowPlaying(station.show.title, station.show.description);
+  }
+
+  playOrStop(station) {
+    if (this.state.playStatus !== 'stopped' && station.streamUrl === this.state.currentUrl) {
       return this.stop();
     }
-    NativeModules.Streaming.play(url);
+    NativeModules.Streaming.play(
+      station.streamUrl,
+      station.show.title,
+      station.show.description
+    );
   }
 
   stop() {

@@ -17,31 +17,37 @@ export default class Station extends Component {
   }
 
   render() {
+    const backgroundColor = this.props.isActive && this.props.playStatus !== 'stopped' ? '#fff' : '#000'
+    const textColor = this.props.isActive && this.props.playStatus !== 'stopped' ? '#000' : '#fff'
+    const borderColor = textColor
+
     return (
       <TouchableHighlight style={{flex: 1}} onPress={this.props.onPress}>
         {this.withImageWrapper(this.props.show.imageUrl,
           (<View style={{flexDirection: 'column'}}>
-            {this.props.isActive &&
-              <View style={{backgroundColor: '#000000', paddingVertical: 10, paddingHorizontal: 14}}>
-                <Text style={{color: '#fff'}}>{this.friendlyStatus(this.props.playStatus)}</Text>
-              </View>}
-            <View style={{backgroundColor: '#ffffffdd', paddingVertical: 10, paddingHorizontal: 14}}>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{backgroundColor: '#000', paddingHorizontal: 5, marginRight: 5, justifyContent: 'center'}}>
-                  <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}>{this.props.name}</Text>
-                </View>
-                <View>
-                  <Text style={{color: '#000', fontSize: 16}}>
-                    {this.props.show.title}
-                  </Text>
-                  {this.props.show.location &&
-                    <Text style={{color: '#000'}}>{this.props.show.location}</Text>}
-                </View>
+            <View style={{
+              backgroundColor: backgroundColor,
+              borderColor: borderColor,
+              borderWidth: 2,
+            }}>
+              <View style={{borderBottomColor: borderColor, borderBottomWidth: 1, padding: 6}}>
+                <Text style={{color: textColor, fontSize: 14, fontFamily: 'monospace', fontWeight: 'bold'}}>
+                  {this.props.show.title}
+                  {this.props.show.location && ` (${this.props.show.location})`}
+                </Text>
               </View>
               {this.props.show.description &&
-                <Text style={{color: '#000', marginTop: 5}}>
-                  {this.props.show.description}
-                </Text>}
+                <View>
+                  <Text style={{color: textColor, fontFamily: 'monospace', fontSize: 12, padding: 6}}>
+                    {this.props.show.description}
+                  </Text>
+                </View>}
+              {this.props.isActive && this.props.playStatus === 'buffering' &&
+                <View style={{borderTopColor: borderColor, borderTopWidth: 1, padding: 6}}>
+                  <Text style={{color: textColor, fontFamily: 'monospace', fontSize: 14, fontWeight: 'bold'}}>
+                    Loading...
+                  </Text>
+                </View>}
             </View>
           </View>))}
       </TouchableHighlight>
@@ -63,7 +69,7 @@ export default class Station extends Component {
   }
 
   withImageWrapper(imageUrl, body) {
-    const style = {flex: 1, justifyContent: 'flex-end'};
+    const style = {flex: 1, justifyContent: 'flex-end', padding: 15};
     if (imageUrl) {
       return (<Image source={{uri: imageUrl}} style={{...style, resizeMode: 'cover'}}>{body}</Image>);
     }
