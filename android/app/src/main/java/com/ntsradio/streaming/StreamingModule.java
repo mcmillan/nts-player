@@ -21,8 +21,17 @@ public class StreamingModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void play(String url) {
+    public void play(String url, String notificationTitle, String notificationText) {
+        playbackManager.setNotificationTitle(notificationTitle);
+        playbackManager.setNotificationText(notificationText);
         playbackManager.play(url);
+    }
+
+    @ReactMethod
+    public void updateNowPlaying(String notificationTitle, String notificationText) {
+        playbackManager.setNotificationTitle(notificationTitle);
+        playbackManager.setNotificationText(notificationText);
+        playbackManager.sendNotification();
     }
 
     @ReactMethod
